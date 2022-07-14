@@ -128,6 +128,9 @@ Operations may be marked as skipped, in which case any missing trace artifacts w
 The Operation Manager can either produce the full report, or can produce a filtered report given a list of
 desired artifact types.
 
+TODO: Update this to reflect that artifacts are named
+Each operation has a set of named artifacts in it
+
 
 All artifacts may have an optional parameter: Direct References.
 This parameter should ONLY be used for debugging purposes, in situations where it is necessary to acquire references to
