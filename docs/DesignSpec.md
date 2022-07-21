@@ -37,17 +37,14 @@ Mod Loaders contain the following components, in order of precedence:
 * The Operation Manager
 
 ## Mod Loaders
-Mod Loaders are instances of WebModLoader that have been provided the following:
-* A web source adapter
+Mod Loaders are instances of WebModLoader that are eventually provided the following:
 * A ModLoader Name
 * A set (possibly empty) of custom mod providers
+* A pair of functions to retrieve and load target source code intended to be modded
 
-## Web Source Adapter
-The Web Source Adapter must provide two functions:
-* getInterceptedSources
-* loadModifiedSources
+Once initialized, an instance of WebModLoader will attempt to begin the mod loading process
 
-The WebModLoader instance must be able to call `getInterceptedSources` at any time after initialization, and this
+The WebModLoader instance must be able to call `getTargetSources` at any time after initialization, and this
 function must return the full list of source-codes for the game or web service. This function can be async, and
 the WebModLoader instance will await its result.
 
@@ -58,11 +55,13 @@ call the finishedLoading callback when these sources have all loaded.
 
 `loadModifiedSources` should be async, and the promise returned should pend until the sources have finished loading.
 
-Also note that the WebModLoader should probably be loaded in the content context
-(rather than the background script context), otherwise any APIs introduced will not be accessible at runtime. 
+Source code sets are passed around as key value sets, key being the name of the source code,
+value being the actual source code itself.
 
+Also note that the WebModLoader should probably be instantiated in the content context
+(rather than the background script context), otherwise any APIs introduced will not be accessible at runtime.
 
-## The Mod Registry
+## The Mod Registry -- CHECK FOR REWRITE NEED
 The Mod Registry begins with Mod Providers.
 All WebModLoaders have two built-in mod providers: UserScriptModProvider and ExtensionModProvider
 Both of these will automatically scan for mods that are installed via a UserScript manager or via Extensions.
@@ -74,19 +73,19 @@ WebMods to WebModLoader. This might be useful, for example, for creating a built
 
 Mods themselves can also register custom Mod Providers during a special stage in the loading procedure.
 
-## The Binding Registry
+## The Binding Registry -- CHECK FOR REWRITE NEED
 The Binding registry is a mapping from unique binding names to bindings.
 
 Bindings are either Abstract Syntax Tree nodes which may be used as targets for injection, or they may be
 JSON-compatible objects derived during any deobfuscation/automatic analysis processes performed by Mods.
 
-## The API Registry
+## The API Registry -- CHECK FOR REWRITE NEED
 The API registry is a mapping from unique API names to API objects.
 
 API objects are objects createc by Mods at runtime which typically contain useful functions or values that other
 mods may use. APIs cannot be used pre-injection. Instead, Bindings must be used for any pre-injection purposes.
 
-## The Operation Manager
+## The Operation Manager -- REWRITE NEEDED
 ### Description
 This section is tentative, because I cannot decide whether this should be done as an object factory, or a registry
 
@@ -159,9 +158,10 @@ is just an interface for this source code interception.
 After the browser has finished loading, the Mod Loader author must create an instance of WebModLoader,
 passing it the required properties (listed in [Mod Loaders](#mod-loaders)).
 
-This will trigger initialization. The WebModLoader instance will then perform the next steps:
+Then, the Mod Loader Author must await the Initialize() function of the WebModLoader instance.
+The WebModLoader instance will then perform the next steps:
 
-## Step 2: Mod Acquisition
+## Step 2: Mod AcquisitionLoa
 The first task performed during initialization is Mod Acquisition.
 In this step, each registerrd Mod Provider is queried for the mods it can provide.
 These query functions may be async, and the WebModLoader will await their result.
