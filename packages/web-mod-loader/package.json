@@ -1,0 +1,17 @@
+{
+  "name": "web-mod-loader",
+  "version": "1.0.0",
+  "description": "A generalized toolkit for developing web mod loaders",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
